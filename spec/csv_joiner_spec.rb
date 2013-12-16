@@ -62,19 +62,17 @@ describe CsvJoiner do
       extract_index(list2, cols2)
     end
 
-    @joiner.instance_eval do
+    common1_actual = @joiner.instance_eval do
       compare_indexed_lists(indexed_list1, indexed_list2)[0]
     end
-        [
-            %w(1 2 3 4 5 6).join(';'),
-            %w(13 14 15 16 17 18).join(';')
-        ]
+    common1_expected = [%w(1 2 3 4 5 6).join(';'), %w(13 14 15 16 17 18).join(';')]
+    common1_actual.should == common1_expected
 
-    @joiner.compare_indexed_lists(indexed_list2, indexed_list1)[0].should ==
-        [
-            %w(1 3 5 7 9).join(';'),
-            %w(13 15 2 2 2).join(';')
-        ]
+    common2_actual = @joiner.instance_eval do
+      compare_indexed_lists(indexed_list2, indexed_list1)[0]
+    end
+    common2_expected = [%w(1 3 5 7 9).join(';'), %w(13 15 2 2 2).join(';')]
+    common2_actual.should == common2_expected
 
   end
 
