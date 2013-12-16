@@ -1,15 +1,18 @@
 class CsvJoiner
 
+
+  private
+
   # Compare 2 text files line by line.
   # It returns new arrays.
   # The first has the common lines.
   # of the two files(comparing with the key).
   # The second has the lines that are missing from file2lines.
-  def compare_files(file1lines, file2lines)
+  def compare_indexed_lists(list1, list2)
     common_lines = []
     diff_lines = []
-    file1lines.each do |k, v|
-      unless file2lines.include?(k)
+    list1.each do |k, v|
+      unless list2.include?(k)
         diff_lines << v
       else
         common_lines << v
@@ -17,8 +20,6 @@ class CsvJoiner
     end
     return common_lines, diff_lines
   end
-
-  private
 
   def extract_index(list, cols)
     index = Hash.new
