@@ -22,6 +22,9 @@ describe CsvJoiner do
               %w(13 15 2 2 2).join(';')]
 
     @joiner = CsvJoiner.new
+
+    @file_path_output = File.join(File.dirname(__FILE__), 'files', 'd.csv')
+    File.delete(@file_path_output) if File.exist?(@file_path_output)
   end
 
   it 'extracts a join key from the line' do
@@ -81,6 +84,92 @@ describe CsvJoiner do
 
   end
 
-  it 'loads a csv file to an array'
+  it 'shows both lines after join' do
+    @joiner.join({data1: @list1,
+                  data2: @list2,
+                  cols1: [1, 3],
+                  cols2: [1, 2]}
+    ).should == [%w(1 2 3 4 5 6 1 3 5 7 9).join(';'),
+                 %w(13 14 15 16 17 18 13 15 2 2 2).join(';')]
+  end
+
+  it 'shows list1 lines after join' do
+    @joiner.join({list: :first,
+                  data1: @list1,
+                  data2: @list2,
+                  cols1: [1, 3],
+                  cols2: [1, 2]}
+    ).should == [%w(1 2 3 4 5 6).join(';'),
+                 %w(13 14 15 16 17 18).join(';')]
+  end
+
+  it 'shows list2 lines after join' do
+    @joiner.join({list: :second,
+                  data1: @list1,
+                  data2: @list2,
+                  cols1: [1, 3],
+                  cols2: [1, 2]}
+    ).should == [%w(1 3 5 7 9).join(';'),
+                 %w(13 15 2 2 2).join(';')]
+  end
+
+  it 'loads a csv file to an array' do
+    file_path = File.join(File.dirname(__FILE__), 'files', 'a.csv')
+    lines = @joiner.instance_eval do
+      read_file(file_path)
+    end
+    lines.should == @list1
+  end
+
+  it 'writes a list to a file' do
+    file_path = File.join(File.dirname(__FILE__), 'files', 'c.csv')
+    list = @list1
+    @joiner.instance_eval do
+      write_list(list, file_path)
+    end
+  end
+
+  it 'shows both lines after joining two files'  do
+
+    file_path_a = File.join(File.dirname(__FILE__), 'files', 'a.csv')
+    file_path_b = File.join(File.dirname(__FILE__), 'files', 'b.csv')
+
+    @joiner.join({file1: file_path_a,
+                  file2: file_path_b,
+                  output_file: @file_path_output,
+                  cols1: [1, 3],
+                  cols2: [1, 2]}
+    ).should == [%w(1 2 3 4 5 6 1 3 5 7 9).join(';'),
+                 %w(13 14 15 16 17 18 13 15 2 2 2).join(';')]
+
+  end
+
+  it 'shows file1 lines after joining two files' do
+    file_path_a = File.join(File.dirname(__FILE__), 'files', 'a.csv')
+    file_path_b = File.join(File.dirname(__FILE__), 'files', 'b.csv')
+
+    @joiner.join({list: :first,
+                  file1: file_path_a,
+                  file2: file_path_b,
+                  output_file: @file_path_output,
+                  cols1: [1, 3],
+                  cols2: [1, 2]}
+    ).should == [%w(1 2 3 4 5 6).join(';'),
+                 %w(13 14 15 16 17 18).join(';')]
+  end
+
+  it 'shows file2 lines after joining two files' do
+    file_path_a = File.join(File.dirname(__FILE__), 'files', 'a.csv')
+    file_path_b = File.join(File.dirname(__FILE__), 'files', 'b.csv')
+
+    @joiner.join({list: :second,
+                  file1: file_path_a,
+                  file2: file_path_b,
+                  output_file: @file_path_output,
+                  cols1: [1, 3],
+                  cols2: [1, 2]}
+    ).should == [%w(1 3 5 7 9).join(';'),
+                 %w(13 15 2 2 2).join(';')]
+  end
 
 end
