@@ -6,6 +6,10 @@ def extract_index(list, cols)
   end
 end
 
+def get_file(filename)
+  File.join(File.dirname(__FILE__), 'files', filename)
+end
+
 describe CsvJoiner do
 
   before do
@@ -114,7 +118,7 @@ describe CsvJoiner do
   end
 
   it 'loads a csv file to an array' do
-    file_path = File.join(File.dirname(__FILE__), 'files', 'a.csv')
+    file_path = get_file 'a.csv'
     lines = @joiner.instance_eval do
       read_file(file_path)
     end
@@ -122,35 +126,28 @@ describe CsvJoiner do
   end
 
   it 'writes a list to a file' do
-    file_path = File.join(File.dirname(__FILE__), 'files', 'c.csv')
+    file_path = get_file 'c.csv'
     list = @list1
     @joiner.instance_eval do
       write_list(list, file_path)
     end
   end
 
-  it 'shows both lines after joining two files'  do
-
-    file_path_a = File.join(File.dirname(__FILE__), 'files', 'a.csv')
-    file_path_b = File.join(File.dirname(__FILE__), 'files', 'b.csv')
-
-    @joiner.join({file1: file_path_a,
-                  file2: file_path_b,
-                  output_file: @file_path_output,
-                  cols1: [1, 3],
-                  cols2: [1, 2]}
+  it 'shows both lines after joining two files' do
+    @joiner.join(
+        {file1: get_file('a.csv'),
+         file2: get_file('b.csv'),
+         output_file: @file_path_output,
+         cols1: [1, 3],
+         cols2: [1, 2]}
     ).should == [%w(1 2 3 4 5 6 1 3 5 7 9).join(';'),
                  %w(13 14 15 16 17 18 13 15 2 2 2).join(';')]
-
   end
 
   it 'shows file1 lines after joining two files' do
-    file_path_a = File.join(File.dirname(__FILE__), 'files', 'a.csv')
-    file_path_b = File.join(File.dirname(__FILE__), 'files', 'b.csv')
-
     @joiner.join({list: :first,
-                  file1: file_path_a,
-                  file2: file_path_b,
+                  file1: get_file('a.csv'),
+                  file2: get_file('b.csv'),
                   output_file: @file_path_output,
                   cols1: [1, 3],
                   cols2: [1, 2]}
@@ -159,12 +156,9 @@ describe CsvJoiner do
   end
 
   it 'shows file2 lines after joining two files' do
-    file_path_a = File.join(File.dirname(__FILE__), 'files', 'a.csv')
-    file_path_b = File.join(File.dirname(__FILE__), 'files', 'b.csv')
-
     @joiner.join({list: :second,
-                  file1: file_path_a,
-                  file2: file_path_b,
+                  file1: get_file('a.csv'),
+                  file2: get_file('b.csv'),
                   output_file: @file_path_output,
                   cols1: [1, 3],
                   cols2: [1, 2]}
@@ -172,4 +166,123 @@ describe CsvJoiner do
                  %w(13 15 2 2 2).join(';')]
   end
 
+  it 'counts the number of file arguments in the options hash' do
+    num = @joiner.instance_eval do
+      count_num_of_file_arguments(
+          {file1: 'some_file_1',
+           file2: 'some_file_2',
+           data1: 'some_data_1',
+           cols1: [1, 3],
+           file3: 'some_file_3',
+           data2: 'some_data_2'}
+      )
+    end
+    num.should == 3
+  end
+
+  it 'counts the number of data arguments in the options hash' do
+    num = @joiner.instance_eval do
+      count_num_of_data_arguments(
+          {file1: 'some_file_1',
+           file2: 'some_file_2',
+           data1: 'some_data_1',
+           cols1: [1, 3],
+           file3: 'some_file_3',
+           data2: 'some_data_2'}
+      )
+    end
+    num.should == 2
+  end
+
+  it 'counts the number of column arguments in the options hash' do
+    num = @joiner.instance_eval do
+      count_num_of_cols_arguments(
+          {file1: 'some_file_1',
+           file2: 'some_file_2',
+           data1: 'some_data_1',
+           cols1: [1, 3],
+           file3: 'some_file_3',
+           data2: 'some_data_2'}
+      )
+    end
+    num.should == 1
+  end
+
+  it 'converts extracts all arguments to their positions (data sources) and columns' do
+    file1 = get_file 'a.csv'
+    file3 = get_file 'b.csv'
+    options = {
+        file1: file1,
+        file3: file3,
+        data2: 'some_data_2',
+        cols1: [1, 7],
+        data4: 'some_data_4',
+        data5: 'some_data_5',
+        cols2: [1],
+        cols3: [1, 3],
+        cols4: [1, 4],
+        cols5: [1, 5]
+    }
+
+    data_sources = @joiner.instance_eval do
+      extract_data_sources(
+          options
+      )
+    end
+
+    data_sources.count.should == 5
+    data_sources.should include(
+                            '1'.to_sym => File.open(file1).readlines.map!{|e| e.chomp},
+                            '2'.to_sym => 'some_data_2',
+                            '3'.to_sym => File.open(file3).readlines.map!{|e| e.chomp},
+                            '4'.to_sym => 'some_data_4',
+                            '5'.to_sym => 'some_data_5',
+                        )
+
+    columns = @joiner.instance_eval do
+      extract_column_arguments(
+          options
+      )
+    end
+
+    columns.count.should == 5
+    columns.should include(
+                       '1'.to_sym => [1, 7],
+                       '2'.to_sym => [1],
+                       '3'.to_sym => [1, 3],
+                       '4'.to_sym => [1, 4],
+                       '5'.to_sym => [1, 5],
+                   )
+  end
+
+  it 'extracts file arguments' do
+    result = Hash.new
+    file1 = get_file 'a.csv'
+    file3 = get_file 'b.csv'
+    options = {
+        file1: file1,
+        file3: file3,
+        data2: 'some_data_2',
+        cols1: [1, 7],
+        data4: 'some_data_4',
+        data5: 'some_data_5',
+        cols2: [1],
+        cols3: [1, 3],
+        cols4: [1, 4],
+        cols5: [1, 5]
+    }
+
+    @joiner.instance_eval do
+      extract_file_arguments(result, options)
+    end
+
+    result.count.should == 2
+    result.should include(
+                            '1'.to_sym => File.open(file1).readlines.map!{|e| e.chomp},
+                            '3'.to_sym => File.open(file3).readlines.map!{|e| e.chomp},
+                        )
+
+  end
+
+  it 'parses the options hash'
 end
