@@ -20,6 +20,20 @@ class CsvJoiner
     ds1 = data_sources['1'.to_sym]
     ds2 = data_sources['2'.to_sym]
 
+    #data_sources.each do |k,v|
+    #  puts "#{k.to_s} - #{v}"
+    #  #common_lines(
+    #  #    extract_index(list1, options[:cols1]),
+    #  #    extract_index(list2, options[:cols2])
+    #  #)
+    #end
+
+    #data_sources.values.to_a.each_with_index do |e, ind|
+    #  puts "#{ind + 1} - #{e} -- #{ind + 2} - #{data_sources.values[(ind + 1)]}"
+    #end
+
+    p data_sources.keys.slice(0,2)
+
     case options[:list]
       when :first
         output_data = common_lines_for_first_list(ds1, ds2, options)
@@ -94,7 +108,7 @@ class CsvJoiner
   end
 
   def write_list(list, file_path)
-    File.open(file_path, "w") do |file|
+    File.open(file_path, 'w') do |file|
       list.each do |el|
         file.puts el
       end
@@ -134,9 +148,7 @@ class CsvJoiner
 
   def extract_file_arguments(result, options)
     get_arguments(options, 'file').each do |arg|
-      puts arg
       result[arg.to_s.split('file')[1].to_sym] = read_file(options[arg])
-      p result
     end
   end
 

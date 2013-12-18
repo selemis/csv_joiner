@@ -285,4 +285,20 @@ describe CsvJoiner do
   end
 
   it 'parses the options hash'
+
+  #def try(arr)
+  #  result = []
+  #  arr.each_with_index do |el, ind|
+  #    result << arr.slice(ind, 2) if arr.slice(ind, 2).count > 1
+  #  end
+  #  p result
+  #  puts 'done'
+  #end
+  #
+  #try ["a", "b"]
+  #
+  #try ["a", "b", "c"]
+  #
+  #try ["a", "b", "c", "d"]
+
 end
