@@ -1,3 +1,4 @@
 .idea/
 coverage/
+spec/files/c.csv
 spec/files/d.csv
