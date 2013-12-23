@@ -6,8 +6,9 @@ Gem::Specification.new do |s|
   s.homepage     = 'http://selemis.home.dyndnds.org'
   s.summary      = 'Utility for joining two csv files'
   s.description  = File.read(File.join(File.dirname(__FILE__), 'README'))
+	s.license      = 'MIT'
 
-  s.files         = Dir['{bin,spec}/**/*'] + %w(LICENSE README)
+  s.files         = Dir['{bin,lib,spec}/**/*'] + %w(LICENSE README)
   s.test_files    = Dir['spec/**/*']
   #s.executables   = [ 'studio_game' ]
 

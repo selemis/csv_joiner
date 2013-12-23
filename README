@@ -1,0 +1,3 @@
+This is a ruby utility for joining lists in the SQL sense Join.
+You provide the lists and the columns on which you want to run join.
+The utility has also the option of converting files to lists and run the join.
