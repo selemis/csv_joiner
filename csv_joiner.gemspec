@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name         = 'csv_joiner'
-  s.version      = '0.1'
-  s.author       = 'Stelios Omirou'
+  s.version      = '0.2'
+  s.author       = 'Ste lios Omirou'
   s.email        = 'selemis@gmail.com'
   s.homepage     = 'http://selemis.home.dyndnds.org'
   s.summary      = 'Utility for joining two csv files'
