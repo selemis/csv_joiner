@@ -32,8 +32,6 @@ class CsvJoiner
     #  puts "#{ind + 1} - #{e} -- #{ind + 2} - #{data_sources.values[(ind + 1)]}"
     #end
 
-    p data_sources.keys.slice(0,2)
-
     case options[:list]
       when :first
         output_data = common_lines_for_first_list(ds1, ds2, options)
