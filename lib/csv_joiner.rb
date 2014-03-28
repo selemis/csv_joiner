@@ -47,6 +47,12 @@ class CsvJoiner
     if options[:output_file]
       write_list(output_data, options[:output_file])
     end
+
+    if options[:diff_output_file]
+      write_list(diff_lines(extract_index(ds1, options[:cols1]),
+                            extract_index(ds2, options[:cols2])), options[:diff_output_file])
+    end
+
     output_data
 
   end

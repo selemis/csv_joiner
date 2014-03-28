@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name         = 'csv_joiner'
-  s.version      = '0.2'
+  s.version      = '0.3.0'
   s.author       = 'Ste lios Omirou'
   s.email        = 'selemis@gmail.com'
   s.homepage     = 'http://selemis.home.dyndnds.org'
