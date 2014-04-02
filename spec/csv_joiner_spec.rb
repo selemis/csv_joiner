@@ -1,4 +1,4 @@
-require_relative '../lib/csv_joiner'
+require 'csv_joiner'
 
 def extract_index(list, cols)
   @joiner.instance_eval do
