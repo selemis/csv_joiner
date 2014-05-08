@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    csv_joiner (0.0.2)
+    csv_joiner (0.3.0)
 
 GEM
   remote: https://rubygems.org/
@@ -19,6 +19,7 @@ GEM
 
 PLATFORMS
   ruby
+  x64-mingw32
 
 DEPENDENCIES
   csv_joiner!
