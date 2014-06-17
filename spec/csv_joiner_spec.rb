@@ -97,6 +97,26 @@ describe CsvJoiner do
                  %w(13 14 15 16 17 18 13 15 2 2 2).join(';')]
   end
 
+  it 'shows both lines after join but the lists are not indexed' do
+
+    list1 = [%w(1 2 3 4 5 6).join(';'),
+              %w(7 8 9 10 11 12).join(';'),
+              %w(13 14 15 16 17 18).join(';'),
+              %w(19 20 21 22 23 24).join(';')]
+
+    list2 = [%w(13 15 2 2 2).join(';'),
+              %w(1 1 1 1 1 1).join(';'),
+              %w(1 3 5 7 9).join(';')]
+
+    @joiner.join({data1: list1,
+                  data2: list2,
+                  cols1: [1, 3],
+                  cols2: [1, 2]}
+    ).should == [%w(1 2 3 4 5 6 1 3 5 7 9).join(';'),
+                 %w(13 14 15 16 17 18 13 15 2 2 2).join(';')]
+  end
+
+
   it 'shows list1 lines after join' do
     @joiner.join({list: :first,
                   data1: @list1,
