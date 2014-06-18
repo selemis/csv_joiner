@@ -40,7 +40,8 @@ class CsvJoiner
       else
         output_data = all_lines(
             common_lines_for_first_list(ds1, ds2, options),
-            common_lines_for_second_list(ds1, ds2, options)
+            common_lines_for_second_list(ds1, ds2, options),
+            options
         )
     end
 
@@ -67,11 +68,16 @@ class CsvJoiner
 
   private
 
-  def all_lines(cl1, cl2)
+  def all_lines(cl1, cl2, options)
+
     all = []
-    cl1.each_with_index do |el, ind|
-      all << el + @separator + cl2[ind]
+    ei1 = extract_index(cl1, options[:cols1])
+    ei2 = extract_index(cl2, options[:cols2])
+
+    ei1.each_key do |key|
+      all << ei1[key] + @separator + ei2[key]
     end
+
     all
   end
 
