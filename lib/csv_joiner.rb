@@ -1,3 +1,4 @@
+# Check in the future if I can join more than one files
 class CsvJoiner
 
   attr_writer :separator
@@ -6,31 +7,23 @@ class CsvJoiner
     @separator = ';'
   end
 
+  # This method joins two arrays based on keys extracted from columns of the arrays.
+  # It takes an option hash.
+  # If the hash key starts with data then it expects an array with data.
+  # If the hash key starts with file, then it expects a file path of a csv file that it will be converted to an array
+  # If the hash key start with cols, then it expects an array with numbers where each number corresponds to the column of the array that will be used to extract the key.
+  # Each hash key is followed by a number that represents the order of the data structures (array) that the options are referred to
+  # At the moment I support only two arrays or files but it can be generalized in the future
+  # There is also a list option that can take the value :first or :second.
+  # If the value is :first, then only the matched content of the first data structure will be in the final result.
+  # If the value is :second, then only the matched content of the second data structure will be in the final result
+  # Otherwise both data structures matched content will be shown.
   def join(options = {})
-
-    # Check in the future if I can join more than one files
-
-    # it assumes that if the file does not exist then the data exists
-    #ds1 = config_data_source(options[:file1], options[:data1])
-    #ds2 = config_data_source(options[:file2], options[:data2])
-
-    data_sources = parse_options(options)[0]
-    columns = parse_options(options)[1]
+    data_sources = extract_data_sources(options)
+    columns = extract_column_arguments(options)
 
     ds1 = data_sources['1'.to_sym]
     ds2 = data_sources['2'.to_sym]
-
-    #data_sources.each do |k,v|
-    #  puts "#{k.to_s} - #{v}"
-    #  #common_lines(
-    #  #    extract_index(list1, options[:cols1]),
-    #  #    extract_index(list2, options[:cols2])
-    #  #)
-    #end
-
-    #data_sources.values.to_a.each_with_index do |e, ind|
-    #  puts "#{ind + 1} - #{e} -- #{ind + 2} - #{data_sources.values[(ind + 1)]}"
-    #end
 
     case options[:list]
       when :first
