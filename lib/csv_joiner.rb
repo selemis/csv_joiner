@@ -20,7 +20,6 @@ class CsvJoiner
   # Otherwise both data structures matched content will be shown.
   def join(options = {})
     data_sources = extract_data_sources(options)
-    columns = extract_column_arguments(options)
 
     ds1 = data_sources['1'.to_sym]
     ds2 = data_sources['2'.to_sym]
@@ -51,6 +50,8 @@ class CsvJoiner
 
   end
 
+  private
+
   def common_lines(indexed_list1, indexed_list2)
     indexed_list1.select { |k, v| indexed_list2.include?(k) }.map { |k, v| v }
   end
@@ -58,8 +59,6 @@ class CsvJoiner
   def diff_lines(indexed_list1, indexed_list2)
     indexed_list1.select { |k, v| !indexed_list2.include?(k) }.map { |k, v| v }
   end
-
-  private
 
   def all_lines(cl1, cl2, options)
 
@@ -115,14 +114,6 @@ class CsvJoiner
       list.each do |el|
         file.puts el
       end
-    end
-  end
-
-  def config_data_source(file, data)
-    if file
-      read_file(file)
-    else
-      data
     end
   end
 
